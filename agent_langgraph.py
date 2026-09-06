@@ -21,7 +21,8 @@ embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001", t
 memory_store = Chroma(
     collection_name="stock_agent_memory",
     embedding_function=embeddings,
-    persist_directory="./stock_agent_memory_db"
+    persist_directory="./stock_agent_memory_db",
+    #collection_metadata={"hnsw": "cosine"} # used to set first time while creating the collection, wont be considered in subsequent calls
 )
 
 
@@ -118,6 +119,7 @@ graph.add_conditional_edges("agent", tools_condition)
 graph.add_edge("tools", "agent")
 checkpointer = InMemorySaver()
 agent_graph = graph.compile(checkpointer=checkpointer)
+agent_graph_deploy = graph.compile()
     
 
 def run_agent(user_prompt:str, thread_id:str = "default_thread", user_id:str = "test2"):
@@ -156,7 +158,7 @@ def run_agent(user_prompt:str, thread_id:str = "default_thread", user_id:str = "
     
     return result
 
-USER_PROMPT = "I've also started keeping an eye on IT sector stocks recently, in addition to my usual picks."
+USER_PROMPT = "what is the current price of Kaynes stock?"
 
-run_agent(USER_PROMPT, user_id="test8")
+run_agent(USER_PROMPT, user_id="test9")
     

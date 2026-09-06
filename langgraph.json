@@ -1,0 +1,8 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "stock_agent": "./agent_langgraph.py:agent_graph_deploy"
+  },
+  "env": "./.env",
+  "python_version": "3.14"
+}

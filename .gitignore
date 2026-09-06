@@ -1,3 +1,4 @@
 /.env
 /stock_agent_memory_db
 /__pycache__
+/.langgraph_api

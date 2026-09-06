@@ -2,3 +2,6 @@ langchain_core
 langchain_google_genai
 langgraph
 langchain_chroma
+langsmith
+yfinance
+feedparser
