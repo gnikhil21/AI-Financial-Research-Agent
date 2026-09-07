@@ -8,6 +8,7 @@ from langchain_chroma import Chroma
 from prompts import EXTRACT_INFORMATION_TEMPLATE, SYSTEM_INSTRUCTION
 import os, json, uuid
 from dotenv import load_dotenv
+from fastapi import FastAPI
 
 load_dotenv()
 os.environ["GOOGLE_API_KEY"] = os.getenv("GOOGLE_API_KEY")
@@ -122,7 +123,7 @@ agent_graph = graph.compile(checkpointer=checkpointer)
 agent_graph_deploy = graph.compile()
     
 
-def run_agent(user_prompt:str, thread_id:str = "default_thread", user_id:str = "test2"):
+def run_agent(user_prompt:str, thread_id:str = "default_thread", user_id:str = "user"):
     
     config = {
         "configurable": {"thread_id": thread_id}
@@ -160,5 +161,15 @@ def run_agent(user_prompt:str, thread_id:str = "default_thread", user_id:str = "
 
 USER_PROMPT = "what is the current price of Kaynes stock?"
 
-run_agent(USER_PROMPT, user_id="test9")
-    
+#run_agent(USER_PROMPT, user_id="test9")
+
+app = FastAPI()
+
+@app.get("/")
+def home():
+    return {"message": "Welcome to the Stock Agent API!"}
+
+@app.post("/chat")
+def chat(user_prompt: str, user_id: str = "test2"):
+    result = run_agent(user_prompt, user_id=user_id)
+    return {"response": result["messages"][-1].content[0]["text"]}

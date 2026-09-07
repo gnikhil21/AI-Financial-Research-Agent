@@ -5,3 +5,4 @@ langchain_chroma
 langsmith
 yfinance
 feedparser
+fastapi
