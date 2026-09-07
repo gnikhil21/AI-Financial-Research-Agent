@@ -120,7 +120,7 @@ graph.add_conditional_edges("agent", tools_condition)
 graph.add_edge("tools", "agent")
 checkpointer = InMemorySaver()
 agent_graph = graph.compile(checkpointer=checkpointer)
-agent_graph_deploy = graph.compile()
+#agent_graph_deploy = graph.compile()
     
 
 def run_agent(user_prompt:str, thread_id:str = "default_thread", user_id:str = "user"):
@@ -159,9 +159,9 @@ def run_agent(user_prompt:str, thread_id:str = "default_thread", user_id:str = "
     
     return result
 
-USER_PROMPT = "what is the current price of Kaynes stock?"
+USER_PROMPT = "what is the current price of reliance?"
 
-#run_agent(USER_PROMPT, user_id="test9")
+#run_agent(USER_PROMPT, user_id="test123")
 
 app = FastAPI()
 
@@ -170,6 +170,6 @@ def home():
     return {"message": "Welcome to the Stock Agent API!"}
 
 @app.post("/chat")
-def chat(user_prompt: str, user_id: str = "test2"):
+def chat(user_prompt: str, user_id: str = "user"):
     result = run_agent(user_prompt, user_id=user_id)
     return {"response": result["messages"][-1].content[0]["text"]}
