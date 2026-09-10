@@ -16,8 +16,8 @@ os.environ["GOOGLE_API_KEY"] = os.getenv("GOOGLE_API_KEY")
 TOOLS = [get_price_history, get_stock_price, search_news]
 llm = ChatGoogleGenerativeAI(model="gemini-3.1-flash-lite", temperature=0.3)
 llm_with_tools = llm.bind_tools(TOOLS)
-
 embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001", task_type="SEMANTIC_SIMILARITY")
+debug_mode = False
 
 memory_store = Chroma(
     collection_name="stock_agent_memory",
@@ -39,11 +39,15 @@ def retrieve_memory(query: str, top_k: int = 3, user_id: str = "test2") -> list[
     Returns:
         A list of relevant memory entries.
     """
-    results = memory_store.similarity_search(query, k=top_k, filter={"user_id": user_id})
-    if results:
-        return [result.page_content for result in results]
+    relevant_memories = []
+    results = memory_store.similarity_search_with_score(query, k=top_k, filter={"user_id": user_id})
+    for matched_memory, distance in results:
+        if distance < 0.2:  # Assuming a threshold for relevance
+            if debug_mode:
+                print(f"Retrieved memory for user {user_id}: '{matched_memory.page_content}' with distance {distance}")
+            relevant_memories.append(matched_memory.page_content)
 
-    return []
+    return relevant_memories
 
 
 def memory_similarity(new_memory: str, user_id: str = "test2", threshold: float = 0.2) -> bool:
@@ -59,7 +63,8 @@ def memory_similarity(new_memory: str, user_id: str = "test2", threshold: float 
     if not results:
         return False
     matched_dod, distance = results[0]
-    print(f"Similarity check: new memory '{new_memory}' vs existing memory '{matched_dod.page_content}' with distance {distance}")
+    if debug_mode:
+        print(f"Similarity check: new memory '{new_memory}' vs existing memory '{matched_dod.page_content}' with distance {distance}")
     return distance < threshold
 
 
@@ -159,9 +164,9 @@ def run_agent(user_prompt:str, thread_id:str = "default_thread", user_id:str = "
     
     return result
 
-USER_PROMPT = "what is the current price of reliance?"
+USER_PROMPT = "Im also looking for stocks such as mahindta and tata motors"
 
-#run_agent(USER_PROMPT, user_id="test123")
+#run_agent(USER_PROMPT, user_id="home1")
 
 app = FastAPI()
 
