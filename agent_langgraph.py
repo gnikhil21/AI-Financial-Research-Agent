@@ -23,7 +23,7 @@ memory_store = Chroma(
     collection_name="stock_agent_memory",
     embedding_function=embeddings,
     persist_directory="./stock_agent_memory_db",
-    #collection_metadata={"hnsw": "cosine"} # used to set first time while creating the collection, wont be considered in subsequent calls
+    collection_metadata={"hnsw": "cosine"} # used to set first time while creating the collection, wont be considered in subsequent calls
 )
 
 

@@ -32,3 +32,8 @@ Example Queries
 - Based on my previous investment preferences, suggest some Indian semiconductor stocks.
 - What stocks have I shown interest in before?
 - Give me the latest news for Hindalco.
+
+For connecting to langsmith, run the following command(Helps in monitoring and observability):-
+python -m langgraph_cli dev
+
+
